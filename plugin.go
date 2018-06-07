@@ -38,7 +38,7 @@ func (p *Plugin) Exec() error {
 }
 
 func (p Plugin) execSonarRunner() error {
-	args := []string{"-jar", "/bin/sonar-runner.jar"}
+	args := []string{"-jar", "/bin/sonar-runner.jar", "-Dsonar.userHome=/sonar/"}
 	for _, arg := range p.Args {
 		args = append(args, arg.Argument+"="+arg.Value)
 	}
