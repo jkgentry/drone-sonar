@@ -38,11 +38,11 @@ func (p *Plugin) Exec() error {
 }
 
 func (p Plugin) execSonarRunner() error {
-	args := []string{"-jar", "/bin/sonar-runner.jar", "-Dsonar.userHome=/sonar/"}
+	args := []string{"-Dsonar.userHome=/sonar/"}
 	for _, arg := range p.Args {
 		args = append(args, arg.Argument+"="+arg.Value)
 	}
-	cmd := exec.Command("java", args...)
+	cmd := exec.Command("sonar-scanner", args...)
 	printCommand(cmd)
 	output, err := cmd.CombinedOutput()
 	printOutput(output)

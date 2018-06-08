@@ -20,21 +20,26 @@ import (
 
 func main() {
 	var args []Argument
-	args = addIfExist("PLUGIN_PROJECT_NAME", "-Dsonar.projectName", args)
-	args = addIfExist("PLUGIN_LOGIN", "-Dsonar.login", args)
-	args = addIfExist("PLUGIN_GITHUB_PULL_REQUEST", "-Dsonar.github.pullRequest", args)
-	args = addIfExist("PLUGIN_ANALYSIS_MODE", "-Dsonar.analysis.mode", args)
-	args = addIfExist("PLUGIN_GITHUB_OAUTH", "-Dsonar.github.oauth", args)
-	args = addIfExist("PLUGIN_GITHUB_REPOSITORY", "-Dsonar.github.repository", args)
+	args = addIfExist("PLUGIN_PROJECT_NAME", "-Dsonar.projectName", args, "DRONE_REPO_NAME")
+	args = addIfExist("PLUGIN_LOGIN", "-Dsonar.login", args, "")
+	args = addIfExist("PLUGIN_GITHUB_PULL_REQUEST", "-Dsonar.github.pullRequest", args, "DRONE_PULL_REQUEST")
+	args = addIfExist("PLUGIN_ANALYSIS_MODE", "-Dsonar.analysis.mode", args, "")
+	args = addIfExist("PLUGIN_GITHUB_OAUTH", "-Dsonar.github.oauth", args, "")
+	args = addIfExist("PLUGIN_GITHUB_REPOSITORY", "-Dsonar.github.repository", args, "DRONE_REPO")
 
 	s := Plugin{Args: args}
 	s.execSonarRunner()
 }
 
-func addIfExist(envVariable string, argument string, args []Argument) []Argument {
+func addIfExist(envVariable string, argument string, args []Argument, defaultEnv string) []Argument {
 	val, ok := os.LookupEnv(envVariable)
 	if ok {
 		return append(args, Argument{Value: val, Argument: "-Dsonar.projectName"})
+	} else if defaultEnv != "" {
+		val, ok := os.LookupEnv(defaultEnv)
+		if ok {
+			return append(args, Argument{Value: val, Argument: "-Dsonar.projectName"})
+		}
 	}
 	return args
 }
