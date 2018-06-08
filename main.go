@@ -29,6 +29,10 @@ func main() {
 	args = addIfExist("PLUGIN_GITHUB_REPOSITORY", "-Dsonar.github.repository", args, "DRONE_REPO")
 
 	s := Plugin{Args: args}
+	val, ok := os.LookupEnv("PLUGIN_CERTIFCATE_AUTHORITY_URL")
+	if ok {
+		s.CertificateAuthorityUrl = val
+	}
 	err := s.execSonarRunner()
 	if err != nil {
 		log.Fatal(err)
