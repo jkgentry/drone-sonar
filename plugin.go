@@ -47,6 +47,10 @@ func (p Plugin) execSonarRunner() error {
 		if err != nil {
 			return err
 		}
+		cmd := exec.Command("update-ca-certificates")
+		printCommand(cmd)
+		output, err := cmd.CombinedOutput()
+		printOutput(output)
 	}
 
 	args := []string{"-Dsonar.userHome=/sonar/"}
