@@ -16,6 +16,9 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"net/http"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -26,7 +29,8 @@ type Argument struct {
 }
 
 type Plugin struct {
-	Args []Argument
+	Args                    []Argument
+	CertificateAuthorityUrl string
 }
 
 func (p *Plugin) Exec() error {
@@ -38,6 +42,13 @@ func (p *Plugin) Exec() error {
 }
 
 func (p Plugin) execSonarRunner() error {
+	if p.CertificateAuthorityUrl != "" {
+		err := downloadFile(p.CertificateAuthorityUrl, "/usr/local/share/ca-certificates")
+		if err != nil {
+			return err
+		}
+	}
+
 	args := []string{"-Dsonar.userHome=/sonar/"}
 	for _, arg := range p.Args {
 		args = append(args, arg.Argument+"="+arg.Value)
@@ -62,4 +73,28 @@ func printOutput(outs []byte) {
 	if len(outs) > 0 {
 		fmt.Printf("==> Output: %s\n", string(outs))
 	}
+}
+
+// Download data from url and write it to specified file
+func downloadFile(url string, file string) error {
+	// create the file
+	out, err := os.Create(file)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	// get the data
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	// writer the body to file
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		return err
+	}
+	return nil
 }

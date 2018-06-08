@@ -15,6 +15,7 @@
 package main
 
 import (
+	"log"
 	"os"
 )
 
@@ -28,7 +29,10 @@ func main() {
 	args = addIfExist("PLUGIN_GITHUB_REPOSITORY", "-Dsonar.github.repository", args, "DRONE_REPO")
 
 	s := Plugin{Args: args}
-	s.execSonarRunner()
+	err := s.execSonarRunner()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func addIfExist(envVariable string, argument string, args []Argument, defaultEnv string) []Argument {
