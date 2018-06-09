@@ -43,7 +43,7 @@ func (p *Plugin) Exec() error {
 
 func (p Plugin) execSonarRunner() error {
 	if p.CertificateAuthorityUrl != "" {
-		err := downloadFile(p.CertificateAuthorityUrl, "/usr/local/share/ca-certificates")
+		err := downloadFile(p.CertificateAuthorityUrl, "/usr/local/share/ca-certificates/authority.pem")
 		if err != nil {
 			return err
 		}
