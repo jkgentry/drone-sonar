@@ -21,14 +21,17 @@ import (
 
 func main() {
 	var args []Argument
-	args = addIfExist("PLUGIN_PROJECT_NAME", "-Dsonar.projectName", args, "DRONE_REPO_NAME")
-	args = addIfExist("PLUGIN_LOGIN", "-Dsonar.login", args, "")
-	args = addIfExist("LOGIN", "-Dsonar.login", args, "")
-	args = addIfExist("PLUGIN_GITHUB_PULL_REQUEST", "-Dsonar.github.pullRequest", args, "DRONE_PULL_REQUEST")
-	args = addIfExist("PLUGIN_ANALYSIS_MODE", "-Dsonar.analysis.mode", args, "")
-	args = addIfExist("PLUGIN_GITHUB_OAUTH", "-Dsonar.github.oauth", args, "")
-	args = addIfExist("GITHUB_OAUTH", "-Dsonar.github.oauth", args, "")
-	args = addIfExist("PLUGIN_GITHUB_REPOSITORY", "-Dsonar.github.repository", args, "DRONE_REPO")
+	var added bool
+	args, _ = addIfExist("PLUGIN_PROJECT_NAME", "-Dsonar.projectName", args, "DRONE_REPO_NAME")
+	args, _ = addIfExist("PLUGIN_LOGIN", "-Dsonar.login", args, "")
+	args, _ = addIfExist("LOGIN", "-Dsonar.login", args, "")
+	args, added = addIfExist("PLUGIN_ANALYSIS_MODE", "-Dsonar.analysis.mode", args, "")
+	if added {
+		args, _ = addIfExist("PLUGIN_GITHUB_PULL_REQUEST", "-Dsonar.github.pullRequest", args, "DRONE_PULL_REQUEST")
+		args, _ = addIfExist("PLUGIN_GITHUB_OAUTH", "-Dsonar.github.oauth", args, "")
+	}
+	args, _ = addIfExist("GITHUB_OAUTH", "-Dsonar.github.oauth", args, "")
+	args, _ = addIfExist("PLUGIN_GITHUB_REPOSITORY", "-Dsonar.github.repository", args, "DRONE_REPO")
 
 	s := Plugin{Args: args}
 	val, ok := os.LookupEnv("PLUGIN_CERTIFICATE_AUTHORITY_URL")
@@ -41,15 +44,15 @@ func main() {
 	}
 }
 
-func addIfExist(envVariable string, argument string, args []Argument, defaultEnv string) []Argument {
+func addIfExist(envVariable string, argument string, args []Argument, defaultEnv string) ([]Argument, bool) {
 	val, ok := os.LookupEnv(envVariable)
 	if ok {
-		return append(args, Argument{Value: val, Argument: argument})
+		return append(args, Argument{Value: val, Argument: argument}), true
 	} else if defaultEnv != "" {
 		val, ok := os.LookupEnv(defaultEnv)
 		if ok {
-			return append(args, Argument{Value: val, Argument: argument})
+			return append(args, Argument{Value: val, Argument: argument}), true
 		}
 	}
-	return args
+	return args, false
 }
