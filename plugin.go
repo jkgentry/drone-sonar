@@ -58,7 +58,7 @@ func (p Plugin) execSonarRunner() error {
 		args = append(args, arg.Argument+"="+arg.Value)
 	}
 	cmd := exec.Command("sonar-scanner", args...)
-	printCommand(cmd)
+	// printCommand(cmd)
 	output, err := cmd.CombinedOutput()
 	printOutput(output)
 
