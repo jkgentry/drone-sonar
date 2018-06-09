@@ -29,7 +29,7 @@ func main() {
 	args = addIfExist("PLUGIN_GITHUB_REPOSITORY", "-Dsonar.github.repository", args, "DRONE_REPO")
 
 	s := Plugin{Args: args}
-	val, ok := os.LookupEnv("PLUGIN_CERTIFCATE_AUTHORITY_URL")
+	val, ok := os.LookupEnv("PLUGIN_CERTIFICATE_AUTHORITY_URL")
 	if ok {
 		s.CertificateAuthorityUrl = val
 	}
