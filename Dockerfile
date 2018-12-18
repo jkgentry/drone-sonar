@@ -10,7 +10,7 @@ RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o sonar
 FROM openjdk:8-jre-alpine
 
 WORKDIR /bin/
-RUN wget https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227.zip -O ./sonarscanner.zip  \
+RUN wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227.zip -O ./sonarscanner.zip  \
     && unzip sonarscanner.zip \
     && rm sonarscanner.zip
 
