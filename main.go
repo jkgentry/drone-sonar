@@ -21,13 +21,18 @@ import (
 
 func main() {
 	var args []Argument
+	var isPR bool
 
 	args, _ = addIfExist("PLUGIN_PROJECT_NAME", "-Dsonar.projectName", args, "DRONE_REPO_NAME")
 	args, _ = addIfExist("PLUGIN_PROJECT_KEY", "-Dsonar.projectKey", args, "DRONE_REPO_NAME")
 	args, _ = addIfExist("PLUGIN_LOGIN", "-Dsonar.login", args, "")
 	args, _ = addIfExist("LOGIN", "-Dsonar.login", args, "")
-	args, _ = addIfExist("PLUGIN_PR_BRANCH", "-Dsonar.pullrequest.branch", args, "DRONE_BRANCH")
-	args, _ = addIfExist("PLUGIN_PR_KEY", "-Dsonar.pullrequest.key", args, "DRONE_PULL_REQUEST")
+	args, isPR = addIfExist("PLUGIN_PR_KEY", "-Dsonar.pullrequest.key", args, "DRONE_PULL_REQUEST")
+
+	if isPR {
+		args, _ = addIfExist("PLUGIN_PR_BRANCH", "-Dsonar.pullrequest.branch", args, "DRONE_BRANCH")
+	}
+
 	args, _ = addIfExist("GITHUB_OAUTH", "-Dsonar.github.oauth", args, "")
 	args, _ = addIfExist("PLUGIN_GITHUB_REPOSITORY", "-Dsonar.github.repository", args, "DRONE_REPO")
 
