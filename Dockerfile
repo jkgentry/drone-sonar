@@ -11,6 +11,7 @@ FROM openjdk:8-jre-alpine
 
 WORKDIR /bin/
 RUN wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492.zip -O ./sonarscanner.zip  \
+    && apk add --no-cache nodejs \
     && unzip sonarscanner.zip \
     && rm sonarscanner.zip
 
