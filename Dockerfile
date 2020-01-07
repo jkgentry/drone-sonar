@@ -7,7 +7,7 @@ COPY plugin.go .
 
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o sonar
 
-FROM openjdk:11-jre-slim
+FROM openjdk:11-jdk
 
 WORKDIR /bin/
 ADD https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873.zip ./sonarscanner.zip
