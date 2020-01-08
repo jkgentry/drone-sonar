@@ -30,7 +30,7 @@ func main() {
 	args, isPR = addIfExist("PLUGIN_PR_KEY", "-Dsonar.pullrequest.key", args, "DRONE_PULL_REQUEST")
 
 	if isPR {
-		args, _ = addIfExist("PLUGIN_PR_BRANCH", "-Dsonar.pullrequest.branch", args, "DRONE_BRANCH")
+		args, _ = addIfExist("PLUGIN_PR_BRANCH", "-Dsonar.pullrequest.branch", args, "DRONE_SOURCE_BRANCH")
 	}
 
 	args, _ = addIfExist("GITHUB_OAUTH", "-Dsonar.github.oauth", args, "")
