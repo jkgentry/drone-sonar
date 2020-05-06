@@ -18,8 +18,8 @@ RUN apt-get update \
     && unzip sonarscanner.zip \
     && rm sonarscanner.zip
 
-ENV SONAR_RUNNER_HOME=/bin/sonar-scanner-4.3.0.2102
-ENV PATH $PATH:/bin/sonar-scanner-4.3.0.2102/bin
+ENV SONAR_RUNNER_HOME=/bin/sonar-scanner-4.3.0.2102-linux
+ENV PATH $PATH:/bin/sonar-scanner-4.3.0.2102-linux/bin
 
 COPY --from=0 /app/sonar .
 CMD ["/bin/sonar"]
